@@ -42,20 +42,21 @@ app.post('/comments',(req,res)=>{
 })
 
 app.put('/comments/:commentId',(req,res)=>{
-    const commentId = req.commentId
+    const commentId = req.params.commentId
     const newText = req.body.newText
     if(newText === undefined){
         res.status(400).send("Bad Request. newText parameter is missing")
+    }else{
+        updateComment(commentId,newText).then(()=>{
+            res.status(200).send("Comment updated successfully")
+        }).catch((err)=>{
+            res.status(500).send({err:err.message})
+        })
     }
-    updateComment(commentId,newText).then(()=>{
-        res.status(200).send("Comment updated successfully")
-    }).catch((err)=>{
-        res.status(500).send(err)
-    })
 })
 
 app.delete('/comments/:commentId',(req,res)=>{
-    deleteComment(req.commentId).then(()=>{
+    deleteComment(req.params.commentId).then(()=>{
         res.status(200).send("Comment deleted successfully")
     }).catch((err)=>{
         res.status(500).send(err)

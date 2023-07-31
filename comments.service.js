@@ -1,6 +1,9 @@
 const mysql = require('mysql2')
 const { establishConnection } = require("./db_connection")
 
+/*
+* This function is for getting all the parent level or start comments of a person as per person's username 
+*/
 const getAllThreadsOfAUser = (userName)=>{
     return new Promise((resolve,reject)=>{
         establishConnection().then((connection)=>{
@@ -31,6 +34,11 @@ const getReplyIdsInQueryFormat = (replies)=>{
     })
     return replyIds
 }
+
+/*
+* This function is used for getting the child level comments that is replies when clicked on functionality like view replies
+* This receives parent comment's id as a parameter and return all the first level replies of that comment 
+*/
 const getReplies = (parentCommentId)=>{
     return new Promise((resolve,reject)=>{
         establishConnection().then((connection)=>{
@@ -62,6 +70,9 @@ const getReplies = (parentCommentId)=>{
     })
 }
 
+/**This function is used to post a new comment. If the parent comment id is null 
+ * then the comment is inserted as a thread start else it is inserted as a reply 
+ * to the given parent comment */
 const postComment = (userName, parentCommentId,commentText)=>{
     return new Promise((resolve,reject)=>{
         if(parentCommentId === null || parentCommentId === undefined){
@@ -123,6 +134,7 @@ const postComment = (userName, parentCommentId,commentText)=>{
     })
 }
 
+/** This function is used to update a comment */
 const updateComment = (commentId,newText)=>{
     return new Promise((resolve,reject)=>{
         establishConnection().then((connection)=>{
@@ -152,6 +164,12 @@ const updateComment = (commentId,newText)=>{
     })
 }
 
+/** This function deletes the given comment from the db
+ * Currently all it's replies are not deleted from the db
+ * But since the parent comment is deleted, these replies will
+ * not be included in any way while getting the comments of the user
+ * since there is no parent reference remaining to these replies 
+ */
 const deleteComment = (commentId)=>{
     return new Promise((resolve,reject)=>{
         establishConnection().then((connection)=>{

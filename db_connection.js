@@ -11,11 +11,6 @@ const connection = mysql.createPool({
 
 const establishConnection = ()=>{
    return new Promise((resolve,reject)=>{
-    // connection.connect((err)=>{
-    //     if(err) reject(err);
-    //     console.log("connected to DB")
-    //     resolve(connection)
-    // })
     connection.getConnection((err,conn)=>{
         if(err) reject(err)
         resolve(conn)
